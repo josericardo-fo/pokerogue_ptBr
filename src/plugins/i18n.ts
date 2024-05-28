@@ -53,20 +53,11 @@ export interface PokemonInfoTranslationEntries {
 
 export interface BerryTranslationEntry {
   name: string,
-  effect: string,
+  effect: string
 }
 
 export interface BerryTranslationEntries {
   [key: string]: BerryTranslationEntry
-}
-
-export interface AchievementTranslationEntry {
-  name?: string,
-  description?: string,
-}
-
-export interface AchievementTranslationEntries {
-  [key: string]: AchievementTranslationEntry;
 }
 
 export interface DialogueTranslationEntry {
@@ -187,7 +178,6 @@ declare module "i18next" {
       modifierType: ModifierTypeTranslationEntries;
       battleMessageUiHandler: SimpleTranslationEntries;
       berry: BerryTranslationEntries;
-      achv: AchievementTranslationEntries;
       gameStatsUiHandler: SimpleTranslationEntries;
       voucher: SimpleTranslationEntries;
       biome: SimpleTranslationEntries;

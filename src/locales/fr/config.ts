@@ -1,10 +1,6 @@
 import { ability } from "./ability";
 import { abilityTriggers } from "./ability-trigger";
-import { achv } from "./achv";
 import { battle } from "./battle";
-import { battleMessageUiHandler } from "./battle-message-ui-handler";
-import { berry } from "./berry";
-import { biome } from "./biome";
 import { commandUiHandler } from "./command-ui-handler";
 import { egg } from "./egg";
 import { fightUiHandler } from "./fight-ui-handler";
@@ -40,11 +36,7 @@ import { pokemonInfoContainer } from "./pokemon-info-container";
 export const frConfig = {
   ability: ability,
   abilityTriggers: abilityTriggers,
-  achv: achv,
   battle: battle,
-  battleMessageUiHandler: battleMessageUiHandler,
-  berry: berry,
-  biome: biome,
   commandUiHandler: commandUiHandler,
   egg: egg,
   fightUiHandler: fightUiHandler,

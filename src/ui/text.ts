@@ -1,10 +1,10 @@
-import i18next from "i18next";
 import BBCodeText from "phaser3-rex-plugins/plugins/gameobjects/tagtext/bbcodetext/BBCodeText";
 import InputText from "phaser3-rex-plugins/plugins/inputtext";
-import BattleScene from "../battle-scene";
-import { EggTier } from "../data/enums/egg-type";
-import { UiTheme } from "../enums/ui-theme";
 import { ModifierTier } from "../modifier/modifier-tier";
+import { EggTier } from "../data/enums/egg-type";
+import BattleScene from "../battle-scene";
+import { UiTheme } from "../enums/ui-theme";
+import i18next from "i18next";
 
 export enum TextStyle {
   MESSAGE,
@@ -44,10 +44,10 @@ const languageSettings: { [key: string]: LanguageSetting } = {
   "en":{},
   "de":{},
   "es":{},
-  "fr":{},
   "it":{},
-  "pt_BR":{},
+  "fr":{},
   "zh_CN":{},
+  "pt_BR":{},
 };
 
 export function addTextObject(scene: Phaser.Scene, x: number, y: number, content: string, style: TextStyle, extraStyleOptions?: Phaser.Types.GameObjects.Text.TextStyle): Phaser.GameObjects.Text {
