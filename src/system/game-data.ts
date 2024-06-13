@@ -1,44 +1,44 @@
+import { GameDataType } from "#app/data/enums/game-data-type";
+import { PlayerGender } from "#app/data/enums/player-gender";
+import { StatusEffect } from "#app/data/status-effect.js";
+import { Variant, variantData } from "#app/data/variant";
+import { Device } from "#app/enums/devices.js";
+import { TerrainChangedEvent, WeatherChangedEvent } from "#app/field/events/arena";
+import { OutdatedPhase, ReloadSessionPhase } from "#app/phases";
+import { SettingKeyboard, setSettingKeyboard } from "#app/system/settings/settings-keyboard";
+import { AES, enc } from "crypto-js";
+import { clientSessionId, loggedInUser, updateUserInfo } from "../account";
+import { BattleType } from "../battle";
 import BattleScene, { PokeballCounts, bypassLogin } from "../battle-scene";
-import Pokemon, { EnemyPokemon, PlayerPokemon } from "../field/pokemon";
+import { Egg } from "../data/egg";
+import { speciesEggMoves } from "../data/egg-moves";
+import { Moves } from "../data/enums/moves";
+import { Species, defaultStarterSpecies } from "../data/enums/species";
+import { allMoves } from "../data/move";
+import { Nature } from "../data/nature";
 import { pokemonEvolutions, pokemonPrevolutions } from "../data/pokemon-evolutions";
 import PokemonSpecies, { allSpecies, getPokemonSpecies, noStarterFormKeys, speciesStarters } from "../data/pokemon-species";
-import { Species, defaultStarterSpecies } from "../data/enums/species";
-import * as Utils from "../utils";
-import * as Overrides from "../overrides";
-import PokemonData from "./pokemon-data";
-import PersistentModifierData from "./modifier-data";
-import ArenaData from "./arena-data";
-import { Unlockables } from "./unlockables";
-import { GameModes, getGameMode } from "../game-mode";
-import { BattleType } from "../battle";
-import TrainerData from "./trainer-data";
 import { trainerConfigs } from "../data/trainer-config";
-import { SettingKeys, resetSettings, setSetting } from "./settings/settings";
-import { achvs } from "./achv";
-import EggData from "./egg-data";
-import { Egg } from "../data/egg";
-import { VoucherType, vouchers } from "./voucher";
-import { AES, enc } from "crypto-js";
-import { Mode } from "../ui/ui";
-import { clientSessionId, loggedInUser, updateUserInfo } from "../account";
-import { Nature } from "../data/nature";
-import { GameStats } from "./game-stats";
-import { Tutorial } from "../tutorial";
-import { Moves } from "../data/enums/moves";
-import { speciesEggMoves } from "../data/egg-moves";
-import { allMoves } from "../data/move";
+import Pokemon, { EnemyPokemon, PlayerPokemon } from "../field/pokemon";
 import { TrainerVariant } from "../field/trainer";
-import { OutdatedPhase, ReloadSessionPhase } from "#app/phases";
-import { Variant, variantData } from "#app/data/variant";
-import {setSettingGamepad, SettingGamepad, settingGamepadDefaults} from "./settings/settings-gamepad";
-import {setSettingKeyboard, SettingKeyboard} from "#app/system/settings/settings-keyboard";
-import { TerrainChangedEvent, WeatherChangedEvent } from "#app/field/events/arena";
-import { Device } from "#app/enums/devices.js";
+import { GameModes, getGameMode } from "../game-mode";
 import { EnemyAttackStatusEffectChanceModifier } from "../modifier/modifier";
-import { StatusEffect } from "#app/data/status-effect.js";
-import { PlayerGender } from "#app/data/enums/player-gender";
-import { GameDataType } from "#app/data/enums/game-data-type";
+import * as Overrides from "../overrides";
+import { Tutorial } from "../tutorial";
+import { Mode } from "../ui/ui";
+import * as Utils from "../utils";
+import { achvs } from "./achv";
+import ArenaData from "./arena-data";
 import ChallengeData from "./challenge-data";
+import EggData from "./egg-data";
+import { GameStats } from "./game-stats";
+import PersistentModifierData from "./modifier-data";
+import PokemonData from "./pokemon-data";
+import { SettingKeys, resetSettings, setSetting } from "./settings/settings";
+import { SettingGamepad, setSettingGamepad, settingGamepadDefaults } from "./settings/settings-gamepad";
+import TrainerData from "./trainer-data";
+import { Unlockables } from "./unlockables";
+import { VoucherType, vouchers } from "./voucher";
 
 const saveKey = "x0i2O7WRiANTqPmZ"; // Temporary; secure encryption is not yet necessary
 
@@ -464,6 +464,72 @@ export class GameData {
             this.voucherCounts[index] = systemData.voucherCounts[index] || 0;
           });
         }
+
+        let totalCaught = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          totalCaught += systemData.dexData[species].caughtCount;
+        }
+        console.log("Total Pokemon Caught:", totalCaught);
+
+        let totalSeen = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          totalSeen += systemData.dexData[species].seenCount;
+        }
+        console.log("Total Pokemon Seen:", totalSeen);
+
+        let totalHatched = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          totalHatched += systemData.dexData[species].hatchedCount;
+        }
+        console.log("Total Pokemon Hatched:", totalHatched);
+
+        let legendaryCaughtCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).legendary) {
+            legendaryCaughtCount += systemData.dexData[species].caughtCount;
+          }
+        }
+        console.log("Legendary Pokemon Caught Count:", legendaryCaughtCount);
+
+        let legendaryHatchedCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).legendary) {
+            legendaryHatchedCount += systemData.dexData[species].hatchedCount;
+          }
+        }
+        console.log("Legendary Pokemon Hatched Count:", legendaryHatchedCount);
+
+        let subLegendaryCaughtCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).subLegendary) {
+            subLegendaryCaughtCount += systemData.dexData[species].caughtCount;
+          }
+        }
+        console.log("SubLegendary Pokemon Caught Count:", subLegendaryCaughtCount);
+
+        let subLegendaryHatchedCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).subLegendary) {
+            subLegendaryHatchedCount += systemData.dexData[species].hatchedCount;
+          }
+        }
+        console.log("SubLegendary Pokemon Hatched Count:", subLegendaryHatchedCount);
+
+        let mythicalCaughtCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).mythical) {
+            mythicalCaughtCount += systemData.dexData[species].caughtCount;
+          }
+        }
+        console.log("Mythical Pokemon Caught Count:", mythicalCaughtCount);
+
+        let mythicalHatchedCount = 0;
+        for (const species of Object.keys(systemData.dexData)) {
+          if (getPokemonSpecies(parseInt(species)).mythical) {
+            mythicalHatchedCount += systemData.dexData[species].hatchedCount;
+          }
+        }
+        console.log("Mythical Pokemon Hatched Count:", mythicalHatchedCount);
 
         this.eggs = systemData.eggs
           ? systemData.eggs.map(e => e.toEgg())
